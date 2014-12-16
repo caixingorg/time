@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8" />
+	<script type="text/javascript" src="too.js"></script>
+	<script type="text/javascript">
+		var time = new Time(); //或者直接使用Time()，有没有New都是可以的
+		var obj = time.getFullTime();//现在的时间为基准
+		console.log(obj.day) //今天是几号
+		console.log(obj.week)//今天是周几
+		console.log(obj.month)//这个月是几月
+		console.log(obj.year)//今年是哪一年
+		console.log(obj.hours)//现在是几点
+		console.log(obj.minute)//现在是多少分钟
+		console.log(obj.seconds)//现在是多少秒
+		console.log(obj.mseconds)//现在是多少毫秒
+		console.log(obj.hab)//习惯时间 2014年12月16日 星期二 17时40分23秒
+
+		// 直接使用Time()
+		console.log(Time().isLeapYear(1996)) //2000年是不是润年
+		console.log(Time().quantityInMonth(2000,12))//2000年12月份有多少天
+		console.log(Time().timeDiff('2010-10-12 01:00:00','2014-12-17 01:00:00','day'))//从参数1到参数2之间差多少天 第3个参数 也可以是second、minute、hour、day
+	</script>
+</head>
+<body>
+
+
+</body>
+</html>
