@@ -1,71 +1,4 @@
-(function(w) {
-	// 原型
-	var Time = function() {
-		if (!(this instanceof Time)) {
-			return new Time();
-		}
-		this.time = new Date();
-	};
-
-	// getFullTime 对象
-	var fullTime = {
-		getFullTime: function() {
-			var _time = this.time;
-			return {
-				day: _time.getDate(),
-				week: _time.getDay(),
-				month: _time.getMonth() + 1,
-				year: _time.getFullYear(),
-				hours: _time.getHours(),
-				minute: _time.getMinutes(),
-				seconds: _time.getSeconds(),
-				mseconds: _time.getMilliseconds(),
-				hab: _time.getFullYear() + '年' + (_time.getMonth() + 1) + '月' + _time.getDate() + '日 星期' + toCweek(_time.getDay()) + ' ' + _time.getHours() + '时' + _time.getMinutes() + '分' + _time.getSeconds() + '秒'
-			}
-		},
-		isLeapYear: function(ele) { //是否是润年
-			var ele = ele || this.time.getFullYear(),
-				// temp = new Date(ele + '/' + 3 + '/0').getDate();
-				temp = new Date(ele,2,0).getDate();
-				// console.log(temp+'..')
-			return (temp === 29) ? true : false;
-		},
-		quantityInMonth: function(year, month) { //查询月内有多少天
-			var year = year || this.time.getFullYear(),
-				month = month || (this.time.getMonth() + 1);
-
-			// return new Date(year + '/' + (month + 1) + '/0').getDate();
-			return new Date(year,(month + 1),0).getDate();
-		},
-		//2010-10-12 01:00:00 这是时间格式
-		timeDiff: function(startTime, endTime, diffType) { //相距时间
-			startTime = startTime.replace(/\-/g, "/");
-			endTime = endTime.replace(/\-/g, "/");
-			diffType = diffType.toLowerCase();
-			var sTime = new Date(startTime), //开始时间
-				eTime = new Date(endTime), //结束时间
-				divNum = 1;
-			switch (diffType) {
-				case "second":
-					divNum = 1000;
-					break;
-				case "minute":
-					divNum = 1000 * 60;
-					break;
-				case "hour":
-					divNum = 1000 * 3600;
-					break;
-				case "day":
-					divNum = 1000 * 3600 * 24;
-					break;
-				default:
-					break;
-			}
-			return parseInt((eTime.getTime() - sTime.getTime()) / parseInt(divNum));
-		}
-	}
-
-
+;(function(w) {
 	// 深度复制工具
 	function extendDeep() {
 		var i,
@@ -124,51 +57,91 @@
 	 * @return {Boolean}     [如果是对象就返回true，反之false]
 	 */
 	function isObject(ele) {
-			return (getType(ele) === 'Object') ? true : false;
+		return (getType(ele) === 'Object') ? true : false;
 	}
+	
 	/**
 	 * [toCweek 把数字转换成汉字的周几]
 	 * @param  {[number]} ele [数字的周几]
 	 * @return {[string]}     [汉字的周几]
 	 */
 	function toCweek(ele) {
-			if (getType(ele) !== 'Number') {
-				ele = Number(ele)
-				if (isNaN(ele)) {
-					return undefined;
-				}
-			}
-			switch (ele) {
-				case 0:
-					return '日';
-					break;
-				case 1:
-					return '一';
-					break;
-				case 2:
-					return '二';
-					break;
-				case 3:
-					return '三';
-					break;
-				case 4:
-					return '四';
-					break;
-				case 5:
-					return '五';
-					break;
-				case 6:
-					return '六';
-					break;
+		if (getType(ele) !== 'Number') {
+			ele = Number(ele);
+			if (isNaN(ele)) {
+				return undefined;
 			}
 		}
-		// 扩展方法getFullTime
+
+		ele = ele % 7;//大于七的处理
+
+		return weeks[ele];
+	}
+
+	// 原型
+	var Time = function() {
+		if (!(this instanceof Time)) {
+			return new Time();
+		}
+		this.time = new Date();
+	};
+	var diffTypes = {
+		second: 1000,
+		minute: 60000,
+		hour: 3600000,
+		day: 86400000
+	};
+	var weeks = ['日','一','二','三','四','五','六'];
+	// getFullTime 对象
+	var fullTime = {
+		getFullTime: function() {
+			var _time = this.time;
+			return {
+				day: _time.getDate(),
+				week: _time.getDay(),
+				month: _time.getMonth() + 1,
+				year: _time.getFullYear(),
+				hours: _time.getHours(),
+				minute: _time.getMinutes(),
+				seconds: _time.getSeconds(),
+				mseconds: _time.getMilliseconds(),
+				hab: _time.getFullYear() + '年' + (_time.getMonth() + 1) + '月' + _time.getDate() + '日 星期' + toCweek(_time.getDay()) + ' ' + _time.getHours() + '时' + _time.getMinutes() + '分' + _time.getSeconds() + '秒'
+			};
+		},
+		isLeapYear: function(ele) { //是否是润年
+			ele = ele || this.time.getFullYear();
+			// temp = new Date(ele + '/' + 3 + '/0').getDate();
+			var temp = new Date(ele,2,0).getDate();
+			// console.log(temp+'..')
+			return (temp === 29) ? true : false;
+		},
+		quantityInMonth: function(year, month) { //查询月内有多少天
+			year = year || this.time.getFullYear();
+			month = month || (this.time.getMonth() + 1);
+
+			// return new Date(year + '/' + (month + 1) + '/0').getDate();
+			return new Date(year,(month + 1),0).getDate();
+		},
+		//2010-10-12 01:00:00 这是时间格式
+		timeDiff: function(startTime, endTime, diffType) { //相距时间
+			startTime = startTime.replace(/\-/g, "/");
+			endTime = endTime.replace(/\-/g, "/");
+			diffType = diffType.toLowerCase();
+			var sTime = new Date(startTime), //开始时间
+				eTime = new Date(endTime), //结束时间
+				divNum = diffTypes[diffType] || 1;
+
+			return parseInt((eTime.getTime() - sTime.getTime()) / parseInt(divNum, 10), 10);
+		}
+	};
+
+	// 扩展方法getFullTime
 	extendDeep(Time.prototype, fullTime);
 	extendDeep(Time.prototype, {
 		version: '1.0'
-	})
+	});
 	if (typeof w.Time === 'undefined') {
 		w.Time = Time;
 	}
 
-})(window)
+})(window);
