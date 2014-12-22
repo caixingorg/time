@@ -26,8 +26,6 @@
 		}
 		return target;
 	}
-
-
 	// 工具函数区
 	var tool_type = {
 		getType : function(ele){
@@ -43,41 +41,7 @@
 			return (this.getType(ele) === 'Object') ? true : false;
 		}
 	}
-	/**
-	 * [getType 获取任意元素类型]
-	 * @param  {[none]} ele [要判断类型的元素]
-	 * @return {[string]}     [返回字符串型类型描述]
-	 */
-	// function getType(ele) {
-	// 	var oStr = Object.prototype.toString.call(ele),
-	// 		reg = /\[object (.*)\]/,
-	// 		arr = reg.exec(oStr);
-	// 	return arr[1];
-	// }
-
-	/**
-	 * [isArray 判断是不是数组]
-	 * @param  {[元素]}  ele [要判断类型的变量]
-	 * @return {Boolean}     [如果是数组就返回true，反之false]
-	 */
-	// function isArray(ele) {
-	// 	return (getType(ele) === 'Array') ? true : false;
-	// }
-
-	/**
-	 * [isObject 判断是不是对象]
-	 * @param  {[元素]}  ele [要判断类型的变量]
-	 * @return {Boolean}     [如果是对象就返回true，反之false]
-	 */
-	// function isObject(ele) {
-	// 	return (getType(ele) === 'Object') ? true : false;
-	// }
 	
-	/**
-	 * [toCweek 把数字转换成汉字的周几]
-	 * @param  {[number]} ele [数字的周几]
-	 * @return {[string]}     [汉字的周几]
-	 */
 	function toCweek(ele) {
 		if (tool_type.getType(ele) !== 'Number') {
 			ele = Number(ele);
@@ -85,38 +49,52 @@
 				return undefined;
 			}
 		}
-
 		ele = ele % 7;//大于七的处理
-
 		return weeks[ele];
 	}
-
 	/**
 	 * [paramToArray 根据参数判断返回何等时间]
 	 * @param  {[type]} args [description]
 	 * @return {[type]}      [description]
 	 */
 	function paramToArray(args){
-		var arr = {
-			yyyy : arguments[0] || '',
-			mth : arguments[1] || '',
-			dd : arguments[2] || '',
-			hh : arguments[3] || '',
-			min : arguments[4] || '',
-			ss : arguments[5] || '',
+		args = args[0];
+		var arr={};
+		if(args.length === 0){
+			return new Date();
 		}
-		return (args.length !== 0 ) ? new Date(arr.yyyy,arr.mth,arr.dd,arr.hh,arr.min,arr.ss) : new Date();
+		if(tool_type.getType(args[0]) === 'String'){
+			var str = args[0],
+			arr1 = str.split(',');
+			arr = {
+				yyyy : arr1[0] || '',
+				mth : arr1[1] || '',
+				dd : arr1[2] || '',
+				hh : arr1[3] || '',
+				min : arr1[4] || '',
+				ss : arr1[5] || '',
+				sss : arr1[6] || '',
+			}
+			return new Date(arr.yyyy,arr.mth,arr.dd,arr.hh,arr.min,arr.ss,arr.sss)
+		}
+		 arr = {
+			yyyy : args[0] || '',
+			mth : args[1] || '',
+			dd : args[2] || '',
+			hh : args[3] || '',
+			min : args[4] || '',
+			ss : args[5] || '',
+			sss : args[6] || ''
+		}
+		return new Date(arr.yyyy,arr.mth,arr.dd,arr.hh,arr.min,arr.ss,arr.sss);
 	}
 
 	// 原型
 	var Time = function() {
 		if (!(this instanceof Time)) {
-			return new Time();
+			return new Time(arguments);
 		}
-		// 支持用户传入时间
-		// this.time = (arguments.length !== 0) ? new Date.apply(this,arguments) : new Date();
-		// this.time = new Date();
-		// this.now = new Date();
+		this.time = paramToArray(arguments);
 	};
 	var diffTypes = {
 		second: 1000,
@@ -127,8 +105,8 @@
 	var weeks = ['日','一','二','三','四','五','六'];
 	// getFullTime 对象
 	var fullTime = {
-		getFullTime: function() {
-			var _time = this.time;
+		getFullTime: function(b) {
+			var _time = b ? new Date() : this.time;
 			return {
 				day: _time.getDate(),
 				week: _time.getDay(),
