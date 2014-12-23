@@ -44,7 +44,7 @@
 	/**
 	 * [toCweek 数字转换汉字]
 	 * @param  {[number]} ele [传入数字]
-	 * @return {[type]}     [description]
+	 * @return {[string]}     [返回汉字]
 	 */
 	function toCweek(ele) {
 		if (tool_type.getType(ele) !== 'Number') {
@@ -56,10 +56,11 @@
 		ele = ele % 7;//大于七的处理
 		return weeks[ele];
 	}
+	//2014,12,10 || '2014,12,10'
 	/**
 	 * [paramToArray 根据参数判断返回何等时间]
-	 * @param  {[type]} args [description]
-	 * @return {[type]}      [description]
+	 * @param  {[type]} args [arguments]
+	 * @return {[Date]}      [根据不同的设定时间返回时间对象]
 	 */
 	function paramToArray(args){
 		args = args[0];
@@ -110,20 +111,36 @@
 	//周单位
 	var weeks = ['日','一','二','三','四','五','六'];
 
-	//闰年
-	Time.isLeapYear = function(ele){
+	/**
+	 * [isLeapYear 是否闰年]
+	 * @param  {[type]}  ele [description]
+	 * @return {Boolean}     [description]
+	 */
+	function isLeapYear(ele){
 		ele = ele || this.time.getFullYear();
 		var temp = new Date(ele,2,0).getDate();
 		return (temp === 29) ? true : false;
 	};
-	//一个月有多少天
-	Time.quantityInMonth = function(year,month){
+	/**
+	 * [quantityInMonth 给定月中返回有多少天]
+	 * @param  {[type]} year  [description]
+	 * @param  {[type]} month [description]
+	 * @return {[type]}       [description]
+	 */
+	function quantityInMonth(year,month){
 		year = year || this.time.getFullYear();
-		month = month || (this.time.getMonth() + 1);
-		return new Date(year,(month + 1),0).getDate();
+		month = month || this.time.getMonth();
+		console.log(year+'...'+month)
+		return new Date(year,month,0).getDate();
 	};
-	// 2个时间差
-	Time.timeDiff = function(startTime, endTime, diffType){
+	/**
+	 * [timeDiff 2个时间差]
+	 * @param  {[type]} startTime [description]
+	 * @param  {[type]} endTime   [description]
+	 * @param  {[type]} diffType  [description]
+	 * @return {[type]}           [description]
+	 */
+	function timeDiff(startTime, endTime, diffType){
 		startTime = startTime.replace(/\-/g, "/");
 		endTime = endTime.replace(/\-/g, "/");
 		diffType = diffType.toLowerCase();
@@ -132,6 +149,11 @@
 			divNum = diffTypes[diffType] || 1;
 		return parseInt((eTime.getTime() - sTime.getTime()) / parseInt(divNum, 10), 10);
 	}
+	/**
+	 * [getFullTime 格式化时间]
+	 * @param  {[b]} b [是否使用当前时间]
+	 * @return {[type]}   [description]
+	 */
 	function getFullTime(b){
 		var _time = b ? new Date() : this.time;
 		return {
@@ -146,10 +168,13 @@
 			hab: _time.getFullYear() + '年' + (_time.getMonth() + 1) + '月' + _time.getDate() + '日 星期' + toCweek(_time.getDay()) + ' ' + _time.getHours() + '时' + _time.getMinutes() + '分' + _time.getSeconds() + '秒'
 		}
 	};
-	
-	extendDeep(Time, {
+	// 扩展
+	extendDeep(Time.prototype, {
 		version: '1.0',
-		getFullTime : getFullTime
+		getFullTime : getFullTime,
+		timeDiff : timeDiff,
+		quantityInMonth :quantityInMonth,
+		isLeapYear : isLeapYear
 	});
 	if (typeof w.Time === 'undefined') {
 		w.Time = Time;
