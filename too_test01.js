@@ -41,7 +41,11 @@
 			return (this.getType(ele) === 'Object') ? true : false;
 		}
 	}
-	
+	/**
+	 * [toCweek 数字转换汉字]
+	 * @param  {[number]} ele [传入数字]
+	 * @return {[type]}     [description]
+	 */
 	function toCweek(ele) {
 		if (tool_type.getType(ele) !== 'Number') {
 			ele = Number(ele);
@@ -96,60 +100,56 @@
 		}
 		this.time = paramToArray(arguments);
 	};
+	//时间差基础单位
 	var diffTypes = {
 		second: 1000,
 		minute: 60000,
 		hour: 3600000,
 		day: 86400000
 	};
+	//周单位
 	var weeks = ['日','一','二','三','四','五','六'];
-	// getFullTime 对象
-	var fullTime = {
-		getFullTime: function(b) {
-			var _time = b ? new Date() : this.time;
-			return {
-				day: _time.getDate(),
-				week: _time.getDay(),
-				month: _time.getMonth() + 1,
-				year: _time.getFullYear(),
-				hours: _time.getHours(),
-				minute: _time.getMinutes(),
-				seconds: _time.getSeconds(),
-				mseconds: _time.getMilliseconds(),
-				hab: _time.getFullYear() + '年' + (_time.getMonth() + 1) + '月' + _time.getDate() + '日 星期' + toCweek(_time.getDay()) + ' ' + _time.getHours() + '时' + _time.getMinutes() + '分' + _time.getSeconds() + '秒'
-			};
-		},
-		isLeapYear: function(ele) { //是否是润年
-			ele = ele || this.time.getFullYear();
-			// temp = new Date(ele + '/' + 3 + '/0').getDate();
-			var temp = new Date(ele,2,0).getDate();
-			// console.log(temp+'..')
-			return (temp === 29) ? true : false;
-		},
-		quantityInMonth: function(year, month) { //查询月内有多少天
-			year = year || this.time.getFullYear();
-			month = month || (this.time.getMonth() + 1);
 
-			// return new Date(year + '/' + (month + 1) + '/0').getDate();
-			return new Date(year,(month + 1),0).getDate();
-		},
-		//2010-10-12 01:00:00 这是时间格式
-		timeDiff: function(startTime, endTime, diffType) { //相距时间
-			startTime = startTime.replace(/\-/g, "/");
-			endTime = endTime.replace(/\-/g, "/");
-			diffType = diffType.toLowerCase();
-			var sTime = new Date(startTime), //开始时间
-				eTime = new Date(endTime), //结束时间
-				divNum = diffTypes[diffType] || 1;
-
-			return parseInt((eTime.getTime() - sTime.getTime()) / parseInt(divNum, 10), 10);
+	//闰年
+	Time.isLeapYear = function(ele){
+		ele = ele || this.time.getFullYear();
+		var temp = new Date(ele,2,0).getDate();
+		return (temp === 29) ? true : false;
+	};
+	//一个月有多少天
+	Time.quantityInMonth = function(year,month){
+		year = year || this.time.getFullYear();
+		month = month || (this.time.getMonth() + 1);
+		return new Date(year,(month + 1),0).getDate();
+	};
+	// 2个时间差
+	Time.timeDiff = function(startTime, endTime, diffType){
+		startTime = startTime.replace(/\-/g, "/");
+		endTime = endTime.replace(/\-/g, "/");
+		diffType = diffType.toLowerCase();
+		var sTime = new Date(startTime), //开始时间
+			eTime = new Date(endTime), //结束时间
+			divNum = diffTypes[diffType] || 1;
+		return parseInt((eTime.getTime() - sTime.getTime()) / parseInt(divNum, 10), 10);
+	}
+	function getFullTime(b){
+		var _time = b ? new Date() : this.time;
+		return {
+			day: _time.getDate(),
+			week: _time.getDay(),
+			month: _time.getMonth() + 1,
+			year: _time.getFullYear(),
+			hours: _time.getHours(),
+			minute: _time.getMinutes(),
+			seconds: _time.getSeconds(),
+			mseconds: _time.getMilliseconds(),
+			hab: _time.getFullYear() + '年' + (_time.getMonth() + 1) + '月' + _time.getDate() + '日 星期' + toCweek(_time.getDay()) + ' ' + _time.getHours() + '时' + _time.getMinutes() + '分' + _time.getSeconds() + '秒'
 		}
 	};
-
-	// 扩展方法getFullTime
-	extendDeep(Time.prototype, fullTime);
-	extendDeep(Time.prototype, {
-		version: '1.0'
+	
+	extendDeep(Time, {
+		version: '1.0',
+		getFullTime : getFullTime
 	});
 	if (typeof w.Time === 'undefined') {
 		w.Time = Time;
