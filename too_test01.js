@@ -27,7 +27,7 @@
 		return target;
 	}
 	// 工具函数区
-	var tool_type = {
+	var tool = {
 		getType : function(ele){
 			var oStr = Object.prototype.toString.call(ele),
 			reg = /\[object (.*)\]/,
@@ -39,15 +39,53 @@
 		},
 		isObject : function (ele) {
 			return (this.getType(ele) === 'Object') ? true : false;
+		},
+		makeArray : function(ele){//有问题
+			 var target = [];
+			 if(ele != null){
+			 	var i = ele.length;
+			 	console.log(i)
+			 	if(i = null || typeof ele === 'string' ||  typeof ele === 'function' || ele.setInterval){
+					target[0] = ele;
+					console.log('走这里了？')
+			 	}else{
+			 		console.log('走这里了1？' + i)
+			 		while(i){
+			 			console.log(i)
+			 			target[--i] = ele[i];
+			 		}
+
+			 	}
+			 }
+			 // console.log(target)
+			return target;
 		}
 	}
+	function $arr(ele) {
+	  if (!ele){
+	  	return [];
+	  } 
+	  if (ele.toArray){
+	  	return ele.toArray();
+	  } 
+	  var length = ele.length || 0, results = new Array(length);
+
+	  while (length--){
+	  	results[length] = ele[length];
+	  } 
+	  return results;
+	}
+
+
+
+
 	/**
 	 * [toCweek 数字转换汉字]
 	 * @param  {[number]} ele [传入数字]
 	 * @return {[string]}     [返回汉字]
 	 */
 	function toCweek(ele) {
-		if (tool_type.getType(ele) !== 'Number') {
+		if (tool.getType(ele) !== 'Number') {
 			ele = Number(ele);
 			if (isNaN(ele)) {
 				return undefined;
@@ -56,19 +94,19 @@
 		ele = ele % 7;//大于七的处理
 		return weeks[ele];
 	}
-	//2014,12,10 || '2014,12,10'
+	//2014,12,10,10,10,10 || '2014,12,10,10,10,10'
 	/**
 	 * [paramToArray 根据参数判断返回何等时间]
 	 * @param  {[type]} args [arguments]
 	 * @return {[Date]}      [根据不同的设定时间返回时间对象]
 	 */
-	function paramToArray(args){
+	function paramToArray(args){//扩展次参数操作
 		args = args[0];
 		var arr={};
 		if(args.length === 0){
 			return new Date();
 		}
-		if(tool_type.getType(args[0]) === 'String'){
+		if(tool.getType(args[0]) === 'String'){
 			var str = args[0],
 			arr1 = str.split(',');
 			arr = {
@@ -77,10 +115,9 @@
 				dd : arr1[2] || '',
 				hh : arr1[3] || '',
 				min : arr1[4] || '',
-				ss : arr1[5] || '',
-				sss : arr1[6] || '',
+				ss : arr1[5] || ''
 			}
-			return new Date(arr.yyyy,arr.mth,arr.dd,arr.hh,arr.min,arr.ss,arr.sss)
+			return new Date(arr.yyyy,arr.mth,arr.dd,arr.hh,arr.min,arr.ss);
 		}
 		 arr = {
 			yyyy : args[0] || '',
@@ -88,10 +125,9 @@
 			dd : args[2] || '',
 			hh : args[3] || '',
 			min : args[4] || '',
-			ss : args[5] || '',
-			sss : args[6] || ''
-		}
-		return new Date(arr.yyyy,arr.mth,arr.dd,arr.hh,arr.min,arr.ss,arr.sss);
+			ss : args[5] || ''
+		};
+		return new Date(arr.yyyy,arr.mth,arr.dd,arr.hh,arr.min,arr.ss);
 	}
 
 	// 原型
@@ -168,6 +204,40 @@
 			hab: _time.getFullYear() + '年' + (_time.getMonth() + 1) + '月' + _time.getDate() + '日 星期' + toCweek(_time.getDay()) + ' ' + _time.getHours() + '时' + _time.getMinutes() + '分' + _time.getSeconds() + '秒'
 		}
 	};
+
+	//countdown
+	//参数：单参数从现在时刻到给定的秒后执行callblack() 核心部分其实是不管给定什么时间，最终都要转换成多少秒
+	// 
+		var countdown = {
+			cTime : null,
+			conutDown : function(){
+				var args = $arr(arguments),
+					len = args.length,
+					callblack = args.pop();
+					if(tool.getType(callblack) !== 'Function'){
+						throw new Error("callblack is undefined.");
+					}
+				if(len > 2){//具体时间
+					var diff = Math.floor((new Date(args[0],(args[1] - 1),args[2],args[3],args[4],args[5]).getTime() - new Date().getTime()) / 1000) * 1000;
+					this.outTime = setTimeout(function() {
+						callblack();
+					},diff);
+				}else if(len <= 2){//设定秒数倒计时
+					this.outTime = setTimeout(function(){
+						callblack();
+					},args[0]);
+				}else{
+					throw new Error("111")
+				}
+			},
+			stop : function(){
+				clearTimeout(this.cTime);
+			}
+		}
+	
+
+
+
 	// 扩展
 	extendDeep(Time.prototype, {
 		version: '1.0',
@@ -176,6 +246,7 @@
 		quantityInMonth :quantityInMonth,
 		isLeapYear : isLeapYear
 	});
+	extendDeep(Time.prototype,countdown)
 	if (typeof w.Time === 'undefined') {
 		w.Time = Time;
 	}
