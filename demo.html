@@ -3,7 +3,7 @@
 <head>
 	<title></title>
 	<meta charset="utf-8" />
-	<script type="text/javascript" src="too.js"></script>
+	<script type="text/javascript" src="too_test01.js"></script>
 	<script type="text/javascript">
 		var time = new Time(); //或者直接使用Time()，有没有New都是可以的，可以传入2中自定义的时间格式，2014,12,10,10,10,10 || '2014,12,10,10,10,10'
 		var obj = time.getFullTime();//现在的时间为基准，可以有一个布尔值的参数，如果true为当前时间，如果为false或者是不传，这使用初始化的时间，如果初始化时，没有传入时间，使用当前时间
@@ -18,16 +18,18 @@
 		console.log(obj.hab)//习惯时间 2014年12月16日 星期二 17时40分23秒
 
 		// 直接使用Time()
-		console.log(Time().isLeapYear(1996)) //1996年是不是润年
-		console.log(Time().quantityInMonth(2000,12))//2000年12月份有多少天
-		console.log(Time().timeDiff('2010-10-12 01:00:00','2014-12-17 01:00:00','day'))//从参数1到参数2之间差多少天 第3个参数 也可以是second、minute、hour、day
+		console.log(Time.isLeapYear(1996)) //1996年是不是润年
+		console.log(Time.quantityInMonth(2000,12))//2000年12月份有多少天
+		console.log(Time.timeDiff('2010-10-12 01:00:00','2014-12-17 01:00:00','day'))//从参数1到参数2之间差多少天 第3个参数 也可以是second、minute、hour、day
 
 		Time().conutDown(2,function(){
 			console.log('2秒后触发');
 		})//第一种形式2个参数，2秒后触发，参数1代表多长时间后触发，单位秒，参数2为回调函数
-		Time().conutDown(2015,2,18,0,0,0,function(){
-			console.log('春节好！');
-		})//第二种形式，参数分别为 年 月 日 时 分 秒，回调;
+		// Time().conutDown(2015,2,18,0,0,0,function(){
+		// 	console.log('春节好！');
+		// })//第二种形式，参数分别为 年 月 日 时 分 秒，回调;
+
+		// console.log(Time.isLeapYear(2000))
 	</script>
 </head>
 <body>

@@ -40,26 +40,6 @@
 		isObject : function (ele) {
 			return (this.getType(ele) === 'Object') ? true : false;
 		}
-		// makeArray : function(ele){//有问题
-		// 	 var target = [];
-		// 	 if(ele != null){
-		// 	 	var i = ele.length;
-		// 	 	console.log(i)
-		// 	 	if(i = null || typeof ele === 'string' ||  typeof ele === 'function' || ele.setInterval){
-		// 			target[0] = ele;
-		// 			console.log('走这里了？')
-		// 	 	}else{
-		// 	 		console.log('走这里了1？' + i)
-		// 	 		while(i){
-		// 	 			console.log(i)
-		// 	 			target[--i] = ele[i];
-		// 	 		}
-
-		// 	 	}
-		// 	 }
-		// 	 // console.log(target)
-		// 	return target;
-		// }
 	}
 	/**
 	 * [$arr 数组话函数]
@@ -102,7 +82,7 @@
 	 * @return {[Date]}      [根据不同的设定时间返回时间对象]
 	 */
 	function paramToArray(args){//扩展次参数操作
-		args = args[0];
+		args = $arr(args[0]);
 		var arr={};
 		if(args.length === 0){
 			return new Date();
@@ -153,7 +133,7 @@
 	 * @param  {[type]}  ele [description]
 	 * @return {Boolean}     [description]
 	 */
-	function isLeapYear(ele){
+	Time.isLeapYear = function(ele){
 		ele = ele || this.time.getFullYear();
 		var temp = new Date(ele,2,0).getDate();
 		return (temp === 29) ? true : false;
@@ -164,10 +144,9 @@
 	 * @param  {[type]} month [description]
 	 * @return {[type]}       [description]
 	 */
-	function quantityInMonth(year,month){
+	Time.quantityInMonth = function(year,month){
 		year = year || this.time.getFullYear();
 		month = month || this.time.getMonth();
-		console.log(year+'...'+month)
 		return new Date(year,month,0).getDate();
 	};
 	/**
@@ -177,7 +156,7 @@
 	 * @param  {[type]} diffType  [description]
 	 * @return {[type]}           [description]
 	 */
-	function timeDiff(startTime, endTime, diffType){
+	 Time.timeDiff = function(startTime, endTime, diffType){
 		startTime = startTime.replace(/\-/g, "/");
 		endTime = endTime.replace(/\-/g, "/");
 		diffType = diffType.toLowerCase();
@@ -236,16 +215,10 @@
 			}
 		}
 	
-
-
-
 	// 扩展
 	extendDeep(Time.prototype, {
 		version: '1.0',
-		getFullTime : getFullTime,
-		timeDiff : timeDiff,
-		quantityInMonth :quantityInMonth,
-		isLeapYear : isLeapYear
+		getFullTime : getFullTime
 	});
 	extendDeep(Time.prototype,countdown)
 	if (typeof w.Time === 'undefined') {
