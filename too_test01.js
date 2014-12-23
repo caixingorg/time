@@ -39,28 +39,33 @@
 		},
 		isObject : function (ele) {
 			return (this.getType(ele) === 'Object') ? true : false;
-		},
-		makeArray : function(ele){//有问题
-			 var target = [];
-			 if(ele != null){
-			 	var i = ele.length;
-			 	console.log(i)
-			 	if(i = null || typeof ele === 'string' ||  typeof ele === 'function' || ele.setInterval){
-					target[0] = ele;
-					console.log('走这里了？')
-			 	}else{
-			 		console.log('走这里了1？' + i)
-			 		while(i){
-			 			console.log(i)
-			 			target[--i] = ele[i];
-			 		}
-
-			 	}
-			 }
-			 // console.log(target)
-			return target;
 		}
+		// makeArray : function(ele){//有问题
+		// 	 var target = [];
+		// 	 if(ele != null){
+		// 	 	var i = ele.length;
+		// 	 	console.log(i)
+		// 	 	if(i = null || typeof ele === 'string' ||  typeof ele === 'function' || ele.setInterval){
+		// 			target[0] = ele;
+		// 			console.log('走这里了？')
+		// 	 	}else{
+		// 	 		console.log('走这里了1？' + i)
+		// 	 		while(i){
+		// 	 			console.log(i)
+		// 	 			target[--i] = ele[i];
+		// 	 		}
+
+		// 	 	}
+		// 	 }
+		// 	 // console.log(target)
+		// 	return target;
+		// }
 	}
+	/**
+	 * [$arr 数组话函数]
+	 * @param  {[元素或类数组]} ele [传进的元素或者类数组话]
+	 * @return {[type]}     [description]
+	 */
 	function $arr(ele) {
 	  if (!ele){
 	  	return [];
@@ -75,10 +80,6 @@
 	  } 
 	  return results;
 	}
-
-
-
-
 	/**
 	 * [toCweek 数字转换汉字]
 	 * @param  {[number]} ele [传入数字]
@@ -225,7 +226,7 @@
 				}else if(len <= 2){//设定秒数倒计时
 					this.outTime = setTimeout(function(){
 						callblack();
-					},args[0]);
+					},args[0]*1000);
 				}else{
 					throw new Error("111")
 				}
